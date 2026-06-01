@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#C9A84C">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Я и Деньги">
+  <title>Я и Деньги — Распределение финансов</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary:  #0D1117;
+      --bg-card:     #161B22;
+      --bg-hover:    #1E2530;
+      --gold:        #C9A84C;
+      --teal:        #00C896;
+      --purple:      #9B59B6;
+      --blue:        #3B82F6;
+      --amber:       #F59E0B;
+      --pink:        #EC4899;
+      --white:       #FFFFFF;
+      --gray:        #B8BCC8;
+      --gray-muted:  #4A5568;
+      --danger:      #E53E3E;
+
+      --c-charity:    #EC4899;
+      --c-parents:    #F59E0B;
+      --c-future:     #3B82F6;
+      --c-fun:        #00C896;
+      --c-company:    #C9A84C;
+      --c-own:        #78A078;
+      --c-capital:    #3B82F6;
+      --c-dream:      #9B59B6;
+      --c-bigDream:   #7C3AED;
+      --c-smallDream: #A855F7;
+      --c-necessity:  #C9A84C;
+      --c-unexpected: #E53E3E;
+
+
+      --nav-h:    64px;
+      --header-h: 60px;
+      --sidebar-w:240px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    button { cursor: pointer; font-family: inherit; }
+    input, select, textarea { font-family: inherit; }
+
+    /* ── Layout ─────────────────────────────────── */
+    .app { display: flex; flex-direction: column; min-height: 100vh; }
+
+    .app-header {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: var(--header-h);
+      background: var(--bg-primary);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 0 1.25rem; z-index: 100;
+    }
+    .logo-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px; color: var(--gold); line-height: 1.2;
+    }
+    .logo-sub { font-size: 11px; font-weight: 300; color: var(--gray); }
+    .header-greeting { font-size: 13px; color: var(--gray); }
+    .btn-settings {
+      background: none; border: none; font-size: 20px;
+      color: var(--gray); padding: 8px; border-radius: 8px;
+      transition: all .2s;
+    }
+    .btn-settings:hover { background: var(--bg-hover); color: var(--white); }
+
+    .app-main {
+      flex: 1;
+      padding-top: var(--header-h);
+      padding-bottom: var(--nav-h);
+    }
+
+    .screen {
+      display: none;
+      padding: 1.5rem 1rem;
+      max-width: 900px; margin: 0 auto;
+    }
+    .screen.active { display: block; }
+
+    .app-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      background: var(--bg-card);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      display: flex; align-items: center; z-index: 100;
+    }
+    .nav-item {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 3px; padding: 8px;
+      background: none; border: none;
+      color: var(--gray-muted); font-size: 10px; font-weight: 500;
+      transition: all .2s;
+    }
+    .nav-icon { font-size: 20px; }
+    .nav-item.active { color: var(--gold); }
+
+    /* ── Income block ───────────────────────────── */
+    .income-block { text-align: center; margin-bottom: 1.5rem; }
+    .income-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px; color: var(--white); margin-bottom: 1.25rem;
+    }
+    .income-row {
+      display: flex; align-items: center;
+      justify-content: center; gap: .75rem; margin-bottom: .4rem;
+    }
+    .income-input {
+      background: none; border: none;
+      border-bottom: 2px solid var(--gold);
+      color: var(--white); font-size: 48px; font-weight: 600;
+      width: 220px; text-align: center; outline: none;
+      padding-bottom: 4px;
+      -moz-appearance: textfield; appearance: textfield;
+    }
+    .income-input::-webkit-inner-spin-button,
+    .income-input::-webkit-outer-spin-button { display: none; }
+    .currency-select {
+      background: var(--bg-card);
+      border: 1px solid var(--gray-muted);
+      color: var(--white); font-size: 18px; font-weight: 500;
+      padding: 8px 12px; border-radius: 10px; outline: none;
+    }
+    .income-words {
+      font-size: 13px; color: var(--gray); font-weight: 300;
+      min-height: 20px; margin-bottom: 1.25rem;
+    }
+    .btn-calc {
+      background: var(--gold); color: #000;
+      border: none; border-radius: 50px;
+      padding: 14px 48px; font-size: 15px; font-weight: 600;
+      transition: all .2s;
+    }
+    .btn-calc:hover { opacity: .9; transform: translateY(-1px); }
+    .btn-calc:active { transform: scale(.97); }
+
+    /* ── Results ────────────────────────────────── */
+    .results-block { display: none; }
+    .results-block.visible { display: block; }
+
+    .level-block {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px; padding: 1.25rem;
+      margin-bottom: .875rem;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity .4s ease, transform .4s ease;
+      box-shadow: 0 4px 24px rgba(0,0,0,.4);
+    }
+    .level-block.show { opacity: 1; transform: none; }
+
+    .level-hdr {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--gray); margin-bottom: .875rem;
+    }
+    .level-hdr span { color: var(--white); font-size: 14px; letter-spacing: 0; text-transform: none; }
+
+    .acc-row {
+      display: flex; align-items: center;
+      padding: 9px 0 9px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      gap: 10px; position: relative; overflow: hidden;
+    }
+    .acc-row::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; border-radius: 0 2px 2px 0;
+    }
+    .acc-row:last-of-type { border-bottom: none; }
+    .acc-emoji { font-size: 19px; flex-shrink: 0; }
+    .acc-info { flex: 1; min-width: 0; }
+    .acc-name { font-size: 14px; font-weight: 500; }
+    .acc-where { font-size: 11px; color: var(--gray); margin-top: 1px; }
+    .acc-pct {
+      font-size: 12px; font-weight: 600;
+      padding: 2px 8px; border-radius: 20px; flex-shrink: 0;
+    }
+    .acc-amt {
+      font-size: 16px; font-weight: 600;
+      text-align: right; min-width: 90px; flex-shrink: 0;
+    }
+
+    .badge {
+      display: inline-block; font-size: 9px; font-weight: 600;
+      padding: 1px 6px; border-radius: 20px; margin-left: 4px;
+      vertical-align: middle;
+    }
+    .badge-bank { background: rgba(59,130,246,.18); color: #3B82F6; }
+    .badge-home { background: rgba(120,160,120,.18); color: #78A078; }
+
+    .level-total {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-top: .875rem; padding-top: .75rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .level-total-lbl { font-size: 13px; color: var(--gray); }
+    .level-total-amt {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; color: var(--gold);
+    }
+
+    /* Level 3 two-column */
+    .l3-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .875rem; margin-bottom: .875rem;
+    }
+    .l3-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px; padding: 1.125rem;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity .4s ease, transform .4s ease;
+      box-shadow: 0 4px 24px rgba(0,0,0,.4);
+    }
+    .l3-card.show { opacity: 1; transform: none; }
+
+    .l3-hdr { display: flex; align-items: center; gap: 8px; margin-bottom: .875rem; }
+    .l3-hdr-emoji { font-size: 22px; }
+    .l3-hdr-info { flex: 1; }
+    .l3-hdr-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px; line-height: 1.2;
+    }
+    .l3-hdr-desc { font-size: 11px; color: var(--gray); margin-top: 2px; }
+    .l3-pct-badge { font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 20px; }
+
+    .l3-main-amt {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px; font-weight: 700; margin-bottom: .625rem;
+    }
+    .l3-bar-track {
+      height: 4px; background: rgba(255,255,255,.08);
+      border-radius: 2px; margin-bottom: .875rem; overflow: hidden;
+    }
+    .l3-bar-fill { height: 100%; border-radius: 2px; width: 0; transition: width .6s ease-out; }
+
+    .l3-child {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 0;
+      border-top: 1px solid rgba(255,255,255,.05);
+    }
+    .l3-child-emoji { font-size: 15px; flex-shrink: 0; }
+    .l3-child-info { flex: 1; min-width: 0; }
+    .l3-child-name { font-size: 13px; font-weight: 500; }
+    .l3-child-where { font-size: 10px; color: var(--gray); }
+    .l3-child-amt { font-size: 13px; font-weight: 600; text-align: right; }
+
+    .l3-grand {
+      display: flex; align-items: center; gap: 8px;
+      padding: 5px 0 5px 1.25rem;
+      border-top: 1px solid rgba(255,255,255,.03);
+    }
+    .l3-grand-emoji { font-size: 13px; }
+    .l3-grand-info { flex: 1; min-width: 0; }
+    .l3-grand-name { font-size: 11px; color: var(--gray); }
+    .l3-grand-amt { font-size: 12px; font-weight: 500; text-align: right; }
+
+    /* ── History ────────────────────────────────── */
+    .history-wrap { margin-top: 2rem; }
+    .sec-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px; margin-bottom: 1rem;
+    }
+    .hist-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 12px;
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 10px; margin-bottom: 7px;
+      cursor: pointer; transition: all .2s;
+    }
+    .hist-item:hover { background: var(--bg-hover); transform: translateX(2px); }
+    .hist-amt { font-size: 15px; font-weight: 600; }
+    .hist-date { font-size: 11px; color: var(--gray); margin-top: 2px; }
+    .hist-empty { text-align: center; padding: 2rem; color: var(--gray-muted); font-size: 14px; }
+    .btn-clear {
+      background: none;
+      border: 1px solid rgba(229,62,62,.3);
+      color: var(--danger); border-radius: 50px;
+      padding: 8px 20px; font-size: 13px; font-weight: 500;
+      margin-top: .625rem; transition: all .2s;
+    }
+    .btn-clear:hover { background: rgba(229,62,62,.1); }
+
+    /* ── Chart screen ───────────────────────────── */
+    .chart-toggle { display: flex; gap: 8px; margin-bottom: 1.5rem; }
+    .chart-tab {
+      flex: 1; background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,.1);
+      color: var(--gray); border-radius: 50px;
+      padding: 10px; font-size: 14px; font-weight: 500;
+      transition: all .2s;
+    }
+    .chart-tab.active { background: var(--gold); color: #000; border-color: var(--gold); }
+    .chart-pane { display: none; }
+    .chart-pane.active { display: block; }
+
+    .donut-wrap {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 1.5rem;
+    }
+    #donutCanvas { max-width: 280px; max-height: 280px; }
+    .legend-item {
+      display: flex; align-items: center; gap: 10px; padding: 5px 0;
+    }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .legend-name { flex: 1; font-size: 13px; color: var(--gray); }
+    .legend-amt { font-size: 13px; font-weight: 500; }
+    .legend-pct { font-size: 12px; color: var(--gray-muted); margin-left: 4px; }
+
+    .flow-wrap { overflow-x: auto; }
+    #flowSvg { display: block; }
+
+    .chart-empty {
+      text-align: center; padding: 3rem;
+      color: var(--gray-muted); font-size: 14px;
+    }
+
+    /* ── Settings ───────────────────────────────── */
+    .settings-sec { margin-bottom: 2rem; }
+    .settings-sub {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: .07em; text-transform: uppercase;
+      color: var(--gray); margin-bottom: .75rem;
+      padding-bottom: .5rem;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .s-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 16px; padding: 1.125rem;
+    }
+    .s-field { margin-bottom: 1.125rem; }
+    .s-field:last-child { margin-bottom: 0; }
+    .s-label { font-size: 13px; font-weight: 500; color: var(--gray); display: block; margin-bottom: .5rem; }
+    .s-input {
+      width: 100%; background: var(--bg-hover);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 10px; padding: 10px 14px;
+      font-size: 14px; color: var(--white); outline: none;
+      transition: border-color .2s;
+    }
+    .s-input:focus { border-color: var(--gold); }
+
+    .cur-opts { display: flex; gap: 8px; flex-wrap: wrap; }
+    .cur-radio { display: none; }
+    .cur-lbl {
+      padding: 8px 20px;
+      background: var(--bg-hover);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 50px; font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: all .2s;аа
+    }
+    .cur-radio:checked + .cur-lbl { background: var(--gold); color: #000; border-color: var(--gold); }
+
+    .slider-row { margin-bottom: 1.125rem; }
+    .slider-row:last-of-type { margin-bottom: 0; }
+    .slider-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+    .slider-name { font-size: 14px; font-weight: 500; }
+    .slider-val { font-size: 14px; font-weight: 600; color: var(--gold); }
+    .slider-subt { font-size: 11px; color: var(--gray); margin-bottom: 5px; }
+    input[type="range"] {
+      width: 100%; -webkit-appearance: none; height: 4px;
+      border-radius: 2px; background: var(--gray-muted); outline: none; cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 18px; height: 18px;
+      border-radius: 50%; background: var(--gold); cursor: pointer;
+      box-shadow: 0 2px 8px rgba(201,168,76,.4);
+    }
+    .settings-note {
+      font-size: 12px; color: var(--gray-muted);
+      margin-top: .75rem; font-style: italic; line-height: 1.6;
+    }
+    .btn-reset {
+      background: none; border: 1px solid rgba(255,255,255,.12);
+      color: var(--gray); border-radius: 50px;
+      padding: 8px 20px; font-size: 13px; font-weight: 500;
+      margin-top: .875rem; transition: all .2s;
+    }
+    .btn-reset:hover { background: var(--bg-hover); color: var(--white); }
+
+    .acc-field {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+    .acc-field:last-child { border-bottom: none; }
+    .acc-field-em { font-size: 17px; }
+    .acc-field-info { flex: 1; }
+    .acc-field-lbl { font-size: 11px; color: var(--gray); margin-bottom: 3px; }
+    .acc-field-inp {
+      width: 100%; background: none; border: none;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+      color: var(--white); font-size: 13px;
+      padding: 3px 0; outline: none; transition: border-color .2s;
+    }
+    .acc-field-inp:focus { border-bottom-color: var(--gold); }
+    .acc-field-inp::placeholder { color: var(--gray-muted); }
+
+    .data-btns { display: flex; flex-direction: column; gap: 9px; }
+    .btn-data {
+      width: 100%; padding: 12px 16px; border-radius: 12px;
+      font-size: 14px; font-weight: 500; text-align: left;
+      border: none; cursor: pointer; transition: all .2s;
+    }
+    .btn-export  { background: rgba(59,130,246,.1); color: #3B82F6; border: 1px solid rgba(59,130,246,.2); }
+    .btn-import  { background: rgba(0,200,150,.1);  color: var(--teal); border: 1px solid rgba(0,200,150,.2); }
+    .btn-danger  { background: rgba(229,62,62,.1);  color: var(--danger); border: 1px solid rgba(229,62,62,.2); }
+    .btn-export:hover  { background: rgba(59,130,246,.18); }
+    .btn-import:hover  { background: rgba(0,200,150,.18); }
+    .btn-danger:hover  { background: rgba(229,62,62,.18); }
+
+    /* ── Toast ──────────────────────────────────── */
+    #toastBox {
+      position: fixed; bottom: calc(var(--nav-h) + 14px);
+      left: 50%; transform: translateX(-50%);
+      z-index: 1000; pointer-events: none;
+      display: flex; flex-direction: column; align-items: center; gap: 7px;
+    }
+    .toast {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 100px; padding: 9px 20px;
+      font-size: 13px; font-weight: 500;
+      white-space: nowrap;
+      box-shadow: 0 4px 20px rgba(0,0,0,.5);
+      animation: tIn .3s ease forwards;
+    }
+    .toast.out { animation: tOut .3s ease forwards; }
+    @keyframes tIn  { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+    @keyframes tOut { from { opacity:1; transform:none; } to { opacity:0; transform:translateY(-6px); } }
+
+    /* ── Tooltip ────────────────────────────────── */
+    #tooltip {
+      position: fixed; background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 8px; padding: 7px 12px;
+      font-size: 12px; pointer-events: none;
+      z-index: 300; display: none; line-height: 1.5;
+    }
+
+    /* ── Onboarding ─────────────────────────────── */
+    #onboarding {
+      position: fixed; inset: 0; background: var(--bg-primary);
+      z-index: 500; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 2rem; text-align: center;
+    }
+    #onboarding.gone { display: none; }
+    .ob-em { font-size: 64px; margin-bottom: 1.25rem; }
+    .ob-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px; margin-bottom: .875rem;
+    }
+    .ob-desc {
+      font-size: 15px; color: var(--gray); font-weight: 300;
+      line-height: 1.7; max-width: 360px; margin-bottom: 1.75rem;
+    }
+    .ob-levels {
+      display: flex; flex-direction: column; gap: 10px;
+      width: 100%; max-width: 360px; margin-bottom: 1.75rem;
+    }
+    .ob-lvl {
+      background: var(--bg-card); border-radius: 12px;
+      padding: 11px 14px; text-align: left;
+      display: flex; gap: 12px; align-items: center;
+    }
+    .ob-lvl-n {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px; color: var(--gold); flex-shrink: 0;
+    }
+    .ob-lvl-title { font-size: 14px; font-weight: 500; }
+    .ob-lvl-desc  { font-size: 12px; color: var(--gray); margin-top: 2px; }
+    .ob-input {
+      width: 100%; max-width: 360px;
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 12px; padding: 13px 18px;
+      font-size: 16px; color: var(--white); outline: none;
+      text-align: center; margin-bottom: 1.25rem; transition: border-color .2s;
+    }
+    .ob-input:focus { border-color: var(--gold); }
+    .btn-start {
+      background: var(--gold); color: #000;
+      border: none; border-radius: 50px;
+      padding: 15px 56px; font-size: 16px; font-weight: 600;
+      transition: all .2s;
+    }
+    .btn-start:hover { opacity: .9; transform: translateY(-2px); }
+
+    /* ── Install banner ─────────────────────────── */
+    #installBanner {
+      position: fixed; bottom: var(--nav-h);
+      left: 0; right: 0;
+      background: var(--bg-card);
+      border-top: 1px solid rgba(201,168,76,.2);
+      padding: 11px 1rem;
+      display: none; align-items: center; gap: 10px; z-index: 200;
+    }
+    #installBanner.on { display: flex; }
+    .ib-text { flex: 1; font-size: 13px; color: var(--gray); }
+    .btn-ib {
+      background: var(--gold); color: #000;
+      border: none; border-radius: 50px;
+      padding: 7px 16px; font-size: 13px; font-weight: 600;
+    }
+    .btn-ib-x {
+      background: none; border: none;
+      color: var(--gray-muted); font-size: 18px; padding: 4px;
+    }
+
+    /* ── Responsive desktop ─────────────────────── */
+    @media (min-width: 1024px) {
+      .app { flex-direction: row; }
+      .app-header { left: var(--sidebar-w); }
+      .app-nav {
+        position: fixed; left: 0; top: 0; bottom: 0;
+        width: var(--sidebar-w); height: 100vh;
+        flex-direction: column; border-top: none;
+        border-right: 1px solid rgba(255,255,255,.07);
+        padding-top: 76px; justify-content: flex-start; gap: 4px;
+      }
+      .nav-item {
+        flex: 0; flex-direction: row;
+        justify-content: flex-start; gap: 10px;
+        padding: 11px 18px; border-radius: 10px;
+        margin: 0 10px; font-size: 14px;
+        width: calc(100% - 20px);
+      }
+      .nav-icon { font-size: 17px; }
+      .app-main { padding-bottom: 0; margin-left: var(--sidebar-w); }
+      .screen { padding: 2rem 1.5rem; }
+      .donut-wrap { flex-direction: row; align-items: flex-start; }
+      #toastBox { bottom: 24px; }
+      #installBanner { left: var(--sidebar-w); }
+    }
+
+    @media (max-width: 480px) {
+      .income-input { font-size: 36px; width: 180px; }
+      .l3-grid { grid-template-columns: 1fr; }
+      .level-total-amt { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Onboarding -->
+<div id="onboarding">
+  <div class="ob-em">💰</div>
+  <h1 class="ob-title">Я и Деньги</h1>
+  <p class="ob-desc">Система распределения финансов из книги «Я и деньги 2». 3 уровня — и ты точно знаешь, куда уходит каждый рубль.</p>
+  <div class="ob-levels">
+    <div class="ob-lvl">
+      <div class="ob-lvl-n">1</div>
+      <div>
+        <div class="ob-lvl-title">Отдаём сразу</div>
+        <div class="ob-lvl-desc">Благотворительность + Родителям → Семейный доход</div>
+      </div>
+    </div>
+    <div class="ob-lvl">
+      <div class="ob-lvl-n">2</div>
+      <div>
+        <div class="ob-lvl-title">Откладываем в банк</div>
+        <div class="ob-lvl-desc">Деньги будущего + Развлечения → Месячный доход</div>
+      </div>
+    </div>
+    <div class="ob-lvl">
+      <div class="ob-lvl-n">3</div>
+      <div>
+        <div class="ob-lvl-title">Распределяем остаток</div>
+        <div class="ob-lvl-desc">Счёт компании 55% + Собственный счёт 45%</div>
+      </div>
+    </div>
+  </div>
+  <input class="ob-input" id="obName" type="text" placeholder="Как тебя зовут? (необязательно)" maxlength="30">
+  <button class="btn-start" id="btnStart">Начать →</button>
+</div>
+
+<!-- App -->
+<div class="app">
+
+  <header class="app-header">
+    <div>
+      <div class="logo-title">💰 Я и Деньги</div>
+      <div class="logo-sub">Распределение финансов</div>
+    </div>
+    <span class="header-greeting" id="headerGreeting"></span>
+    <button class="btn-settings" id="btnGoSettings">⚙️</button>
+  </header>
+
+  <main class="app-main">
+
+    <!-- Home -->
+    <section class="screen active" id="screen-home">
+
+      <div class="income-block">
+        <h2 class="income-title">Ваш общий доход</h2>
+        <div class="income-row">
+          <input class="income-input" id="incomeInput" type="number" placeholder="0" min="0">
+          <select class="currency-select" id="curSelect">
+            <option>₽</option><option>$</option><option>€</option><option>₸</option>
+          </select>
+        </div>
+        <div class="income-words" id="incomeWords"></div>
+        <button class="btn-calc" id="btnCalc">Рассчитать</button>
+      </div>
+
+      <div class="results-block" id="results">
+
+        <!-- Level 1 -->
+        <div class="level-block" id="lvl1">
+          <div class="level-hdr">Из общего дохода: <span id="l1src">—</span></div>
+
+          <div class="acc-row" style="--c:var(--c-charity)">
+            <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c-charity);border-radius:0 2px 2px 0"></div>
+            <span class="acc-emoji">🤲</span>
+            <div class="acc-info">
+              <div class="acc-name">Благотворительность</div>
+              <div class="acc-where">Любой фонд или нуждающийся</div>
+            </div>
+            <span class="acc-pct" style="background:rgba(236,72,153,.14);color:var(--c-charity)" id="pctCharity">2.5%</span>
+            <div class="acc-amt" id="amtCharity">—</div>
+          </div>
+
+          <div class="acc-row">
+            <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c-parents);border-radius:0 2px 2px 0"></div>
+            <span class="acc-emoji">👨‍👩‍👧</span>
+            <div class="acc-info">
+              <div class="acc-name">Родителям</div>
+              <div class="acc-where">Напрямую родителям</div>
+            </div>
+            <span class="acc-pct" style="background:rgba(245,158,11,.14);color:var(--c-parents)" id="pctParents">10%</span>
+            <div class="acc-amt" id="amtParents">—</div>
+          </div>
+
+          <div class="level-total">
+            <span class="level-total-lbl">→ Семейный доход</span>
+            <span class="level-total-amt" id="amtFamily">—</span>
+          </div>
+        </div>
+
+        <!-- Level 2 -->
+        <div class="level-block" id="lvl2">
+          <div class="level-hdr">Из семейного дохода: <span id="l2src">—</span></div>
+
+          <div class="acc-row">
+            <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c-future);border-radius:0 2px 2px 0"></div>
+            <span class="acc-emoji">🏦</span>
+            <div class="acc-info">
+              <div class="acc-name">Деньги будущего <span class="badge badge-bank">БАНК</span></div>
+              <div class="acc-where" id="whereFuture">Отдельный счёт в банке</div>
+            </div>
+            <span class="acc-pct" style="background:rgba(59,130,246,.14);color:var(--c-future)" id="pctFuture">10%</span>
+            <div class="acc-amt" id="amtFuture">—</div>
+          </div>
+
+          <div class="acc-row">
+            <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c-fun);border-radius:0 2px 2px 0"></div>
+            <span class="acc-emoji">🎉</span>
+            <div class="acc-info">
+              <div class="acc-name">Развлечения <span class="badge badge-bank">БАНК</span></div>
+              <div class="acc-where" id="whereFun">Отдельный счёт в банке</div>
+            </div>
+            <span class="acc-pct" style="background:rgba(0,200,150,.14);color:var(--c-fun)" id="pctFun">10%</span>
+            <div class="acc-amt" id="amtFun">—</div>
+          </div>
+
+          <div class="level-total">
+            <span class="level-total-lbl">→ Месячный доход</span>
+            <span class="level-total-amt" id="amtMonthly">—</span>
+          </div>
+        </div>
+
+        <!-- Level 3 -->
+        <div class="l3-grid">
+
+          <!-- Company -->
+          <div class="l3-card" id="lvl3company">
+            <div class="l3-hdr">
+              <span class="l3-hdr-emoji">👑</span>
+              <div class="l3-hdr-info">
+                <div class="l3-hdr-name">Счёт компании</div>
+                <div class="l3-hdr-desc">Завтрашние деньги</div>
+              </div>
+              <span class="l3-pct-badge" style="background:rgba(201,168,76,.14);color:var(--c-company)">55%</span>
+            </div>
+            <div class="l3-main-amt" style="color:var(--c-company)" id="amtCompany">—</div>
+            <div class="l3-bar-track"><div class="l3-bar-fill" style="background:var(--c-company)" id="barCompany"></div></div>
+            <div>
+              <div class="l3-child">
+                <span class="l3-child-emoji">💰</span>
+                <div class="l3-child-info">
+                  <div class="l3-child-name">Капитал <span class="badge badge-bank">БАНК</span></div>
+                  <div class="l3-child-where" id="whereCapital">Инвестиции — не тратить</div>
+                </div>
+                <div class="l3-child-amt" style="color:var(--c-capital)" id="amtCapital">—</div>
+              </div>
+              <div class="l3-child">
+                <span class="l3-child-emoji">✨</span>
+                <div class="l3-child-info">
+                  <div class="l3-child-name">Мечта</div>
+                  <div class="l3-child-where">Копим на желания</div>
+                </div>
+                <div class="l3-child-amt" style="color:var(--c-dream)" id="amtDream">—</div>
+              </div>
+              <div class="l3-grand">
+                <span class="l3-grand-emoji">🏠</span>
+                <div class="l3-grand-info">
+                  <div class="l3-grand-name">Крупные мечты <span class="badge badge-bank">БАНК</span></div>
+                </div>
+                <div class="l3-grand-amt" style="color:var(--c-bigDream)" id="amtBigDream">—</div>
+              </div>
+              <div class="l3-grand">
+                <span class="l3-grand-emoji">🎁</span>
+                <div class="l3-grand-info">
+                  <div class="l3-grand-name">Мелкие мечты <span class="badge badge-home">ДОМА</span></div>
+                </div>
+                <div class="l3-grand-amt" style="color:var(--c-smallDream)" id="amtSmallDream">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Own -->
+          <div class="l3-card" id="lvl3own">
+            <div class="l3-hdr">
+              <span class="l3-hdr-emoji">🏠</span>
+              <div class="l3-hdr-info">
+                <div class="l3-hdr-name">Собственный счёт</div>
+                <div class="l3-hdr-desc">Сегодняшние деньги</div>
+              </div>
+              <span class="l3-pct-badge" style="background:rgba(120,160,120,.14);color:var(--c-own)">45%</span>
+            </div>
+            <div class="l3-main-amt" style="color:var(--c-own)" id="amtOwn">—</div>
+            <div class="l3-bar-track"><div class="l3-bar-fill" style="background:var(--c-own)" id="barOwn"></div></div>
+            <div>
+              <div class="l3-child">
+                <span class="l3-child-emoji">🛒</span>
+                <div class="l3-child-info">
+                  <div class="l3-child-name">Необходимое <span class="badge badge-home">ДОМА</span></div>
+                  <div class="l3-child-where">Еда, аренда, транспорт</div>
+                </div>
+                <div class="l3-child-amt" style="color:var(--c-necessity)" id="amtNecessity">—</div>
+              </div>
+              <div class="l3-child">
+                <span class="l3-child-emoji">⚡</span>
+                <div class="l3-child-info">
+                  <div class="l3-child-name">Непредвиденное <span class="badge badge-home">ДОМА</span></div>
+                  <div class="l3-child-where">Резерв на внезапные траты</div>
+                </div>
+                <div class="l3-child-amt" style="color:var(--c-unexpected)" id="amtUnexpected">—</div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /l3-grid -->
+      </div><!-- /results -->
+
+      <!-- History -->
+      <div class="history-wrap" id="historyWrap">
+        <h3 class="sec-title">История расчётов</h3>
+        <div id="histList"></div>
+        <button class="btn-clear" id="btnClearHist">🗑 Очистить историю</button>
+      </div>
+
+    </section>
+
+    <!-- Chart -->
+    <section class="screen" id="screen-chart">
+      <h2 class="sec-title">Визуализация</h2>
+      <div id="chartEmpty" class="chart-empty"><div style="font-size:48px;margin-bottom:12px">📊</div>Сначала рассчитай доход</div>
+      <div id="chartContent" style="display:none">
+        <div class="chart-toggle">
+          <button class="chart-tab active" id="tabDonut">🍩 Диаграмма</button>
+          <button class="chart-tab" id="tabFlow">🌳 Дерево</button>
+        </div>
+        <div class="chart-pane active" id="paneDonut">
+          <div class="donut-wrap">
+            <canvas id="donutCanvas" width="280" height="280"></canvas>
+            <div id="donutLegend" style="width:100%"></div>
+          </div>
+        </div>
+        <div class="chart-pane" id="paneFlow">
+          <div class="flow-wrap">
+            <svg id="flowSvg"></svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Settings -->
+    <section class="screen" id="screen-settings">
+      <h2 class="sec-title">Настройки</h2>
+
+      <div class="settings-sec">
+        <div class="settings-sub">Личные данные</div>
+        <div class="s-card">
+          <div class="s-field">
+            <label class="s-label">Ваше имя</label>
+            <input class="s-input" id="sName" type="text" placeholder="Введите имя" maxlength="30">
+          </div>
+          <div class="s-field">
+            <label class="s-label">Валюта</label>
+            <div class="cur-opts">
+              <input class="cur-radio" type="radio" name="sCur" value="₽" id="c1"><label class="cur-lbl" for="c1">₽</label>
+              <input class="cur-radio" type="radio" name="sCur" value="$" id="c2"><label class="cur-lbl" for="c2">$</label>
+              <input class="cur-radio" type="radio" name="sCur" value="€" id="c3"><label class="cur-lbl" for="c3">€</label>
+              <input class="cur-radio" type="radio" name="sCur" value="₸" id="c4"><label class="cur-lbl" for="c4">₸</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-sec">
+        <div class="settings-sub">Настраиваемые проценты</div>
+        <div class="s-card">
+          <div class="slider-row">
+            <div class="slider-hdr">
+              <span class="slider-name">🤲 Благотворительность</span>
+              <span class="slider-val" id="svCharity">2.5%</span>
+            </div>
+            <div class="slider-subt" id="saCharity"></div>
+            <input type="range" id="srCharity" min="0" max="10" step="0.5" value="2.5">
+          </div>
+          <div class="slider-row">
+            <div class="slider-hdr">
+              <span class="slider-name">👨‍👩‍👧 Родителям</span>
+              <span class="slider-val" id="svParents">10%</span>
+            </div>
+            <div class="slider-subt" id="saParents"></div>
+            <input type="range" id="srParents" min="0" max="20" step="1" value="10">
+          </div>
+          <div class="slider-row">
+            <div class="slider-hdr">
+              <span class="slider-name">🏦 Деньги будущего</span>
+              <span class="slider-val" id="svFuture">10%</span>
+            </div>
+            <div class="slider-subt" id="saFuture"></div>
+            <input type="range" id="srFuture" min="5" max="20" step="1" value="10">
+          </div>
+          <div class="slider-row">
+            <div class="slider-hdr">
+              <span class="slider-name">🎉 Развлечения</span>
+              <span class="slider-val" id="svFun">10%</span>
+            </div>
+            <div class="slider-subt" id="saFun"></div>
+            <input type="range" id="srFun" min="5" max="20" step="1" value="10">
+          </div>
+          <p class="settings-note">Уровень 3 фиксирован по книге: Компания 55% / Личное 45% → Капитал 80% / Мечта 20% → Крупные 50% / Мелкие 50% → Необходимое 90% / Непредвид. 10%</p>
+          <button class="btn-reset" id="btnResetPct">↩ Сбросить к значениям книги</button>
+        </div>
+      </div>
+
+      <div class="settings-sec">
+        <div class="settings-sub">Мои банковские счета</div>
+        <div class="s-card">
+          <div class="acc-field"><span class="acc-field-em">💰</span><div class="acc-field-info"><div class="acc-field-lbl">Капитал (банк)</div><input class="acc-field-inp" id="an_capital" placeholder="Сбер накопительный"></div></div>
+          <div class="acc-field"><span class="acc-field-em">🏠</span><div class="acc-field-info"><div class="acc-field-lbl">Крупные мечты (банк)</div><input class="acc-field-inp" id="an_bigDream" placeholder="Т-Банк копилка Квартира"></div></div>
+          <div class="acc-field"><span class="acc-field-em">🎁</span><div class="acc-field-info"><div class="acc-field-lbl">Мелкие мечты (дома)</div><input class="acc-field-inp" id="an_smallDream" placeholder="Конверт дома"></div></div>
+          <div class="acc-field"><span class="acc-field-em">🏦</span><div class="acc-field-info"><div class="acc-field-lbl">Деньги будущего (банк)</div><input class="acc-field-inp" id="an_future" placeholder="ВТБ депозит"></div></div>
+          <div class="acc-field"><span class="acc-field-em">🎉</span><div class="acc-field-info"><div class="acc-field-lbl">Развлечения (банк)</div><input class="acc-field-inp" id="an_fun" placeholder="Карта Тинькофф"></div></div>
+        </div>
+      </div>
+
+      <div class="settings-sec">
+        <div class="settings-sub">Управление данными</div>
+        <div class="s-card">
+          <div class="data-btns">
+            <button class="btn-data btn-export" id="btnExport">📤 Экспорт данных в JSON</button>
+            <button class="btn-data btn-import" id="btnImportTrigger">📥 Импорт данных из JSON</button>
+            <input type="file" id="fileImport" accept=".json" style="display:none">
+            <button class="btn-data btn-danger" id="btnDeleteAll">🗑 Удалить все данные</button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <nav class="app-nav">
+    <button class="nav-item active" data-screen="home"><span class="nav-icon">🏠</span><span>Расчёт</span></button>
+    <button class="nav-item" data-screen="chart"><span class="nav-icon">📊</span><span>График</span></button>
+    <button class="nav-item" data-screen="settings"><span class="nav-icon">⚙️</span><span>Настройки</span></button>
+  </nav>
+
+</div>
+
+<div id="tooltip"></div>
+<div id="toastBox"></div>
+<div id="installBanner">
+  <span class="ib-text">📲 Установить как приложение</span>
+  <button class="btn-ib" id="btnInstall">Установить</button>
+  <button class="btn-ib-x" id="btnInstallX">✕</button>
+</div>
+
+<script>
+// ─── Constants ───────────────────────────────────────────────
+const LS = { settings:'yid_settings', history:'yid_history', accounts:'yid_accounts' };
+const DEF_PCT = { charity:2.5, parents:10, future:10, fun:10 };
+const DEF_SETTINGS = { name:'', currency:'₽', percentages:{...DEF_PCT}, lastIncome:null, onboarded:false };
+
+// ─── State ───────────────────────────────────────────────────
+let cfg  = deepClone(DEF_SETTINGS);
+let hist = [];
+let accs = {};
+let lastResult = null;
+let deferredInstall = null;
+
+function deepClone(o) { return JSON.parse(JSON.stringify(o)); }
+
+// ─── Storage ─────────────────────────────────────────────────
+function loadStorage() {
+  try {
+    const s = localStorage.getItem(LS.settings);
+    if (s) { const p = JSON.parse(s); cfg = {...DEF_SETTINGS,...p,percentages:{...DEF_PCT,...p.percentages}}; }
+    const h = localStorage.getItem(LS.history);
+    if (h) hist = JSON.parse(h);
+    const a = localStorage.getItem(LS.accounts);
+    if (a) accs = JSON.parse(a);
+  } catch(e) {}
+}
+const saveSettings = () => localStorage.setItem(LS.settings, JSON.stringify(cfg));
+const saveHistory  = () => localStorage.setItem(LS.history,  JSON.stringify(hist));
+const saveAccounts = () => localStorage.setItem(LS.accounts, JSON.stringify(accs));
+
+// ─── Calculate ────────────────────────────────────────────────
+function calculate(total, pct) {
+  const charityAmt    = total * (pct.charity / 100);
+  const parentsAmt    = total * (pct.parents / 100);
+  const familyIncome  = total - charityAmt - parentsAmt;
+  const futureAmt     = familyIncome * (pct.future / 100);
+  const funAmt        = familyIncome * (pct.fun / 100);
+  const monthlyIncome = familyIncome - futureAmt - funAmt;
+  const companyAmt    = monthlyIncome * 0.55;
+  const ownAmt        = monthlyIncome * 0.45;
+  const capitalAmt    = companyAmt * 0.80;
+  const dreamAmt      = companyAmt * 0.20;
+  const bigDreamAmt   = dreamAmt * 0.50;
+  const smallDreamAmt = dreamAmt * 0.50;
+  const necessityAmt  = ownAmt * 0.90;
+  const unexpectedAmt = ownAmt * 0.10;
+  return { total, charityAmt, parentsAmt, familyIncome,
+           futureAmt, funAmt, monthlyIncome,
+           companyAmt, ownAmt, capitalAmt, dreamAmt,
+           bigDreamAmt, smallDreamAmt, necessityAmt, unexpectedAmt };
+}
+
+// ─── Format ──────────────────────────────────────────────────
+function fmt(n, cur) {
+  cur = cur || cfg.currency;
+  const v = Math.round(n * 100) / 100;
+  return v.toLocaleString('ru-RU', {minimumFractionDigits:0, maximumFractionDigits:2}) + ' ' + cur;
+}
+
+// ─── Number to words ─────────────────────────────────────────
+function toWords(n, cur) {
+  if (!n || n <= 0) return '';
+  n = Math.floor(n);
+  cur = cur || cfg.currency;
+  const ones = ['','один','два','три','четыре','пять','шесть','семь','восемь','девять',
+    'десять','одиннадцать','двенадцать','тринадцать','четырнадцать','пятнадцать',
+    'шестнадцать','семнадцать','восемнадцать','девятнадцать'];
+  const tens = ['','','двадцать','тридцать','сорок','пятьдесят','шестьдесят','семьдесят','восемьдесят','девяносто'];
+  const hunds = ['','сто','двести','триста','четыреста','пятьсот','шестьсот','семьсот','восемьсот','девятьсот'];
+  const onesFem = ['','одна','две','три','четыре','пять','шесть','семь','восемь','девять',
+    'десять','одиннадцать','двенадцать','тринадцать','четырнадцать','пятнадцать',
+    'шестнадцать','семнадцать','восемнадцать','девятнадцать'];
+
+  function chunk(num, fem) {
+    if (!num) return '';
+    let r = '';
+    const h = Math.floor(num/100), rest = num%100, t = Math.floor(rest/10), o = rest%10;
+    if (h) r += hunds[h] + ' ';
+    if (rest < 20) { if (rest) r += (fem ? onesFem[rest] : ones[rest]) + ' '; }
+    else { if (t) r += tens[t] + ' '; if (o) r += (fem ? onesFem[o] : ones[o]) + ' '; }
+    return r;
+  }
+  function pl(n, a, b, c) {
+    const m10=n%10, m100=n%100;
+    if (m100>=11&&m100<=19) return c;
+    if (m10===1) return a; if (m10>=2&&m10<=4) return b; return c;
+  }
+
+  let res = '';
+  if (n>=1000000) { const m=Math.floor(n/1000000); res+=chunk(m,false)+pl(m,'миллион','миллиона','миллионов')+' '; n%=1000000; }
+  if (n>=1000)    { const t=Math.floor(n/1000);    res+=chunk(t,true)+pl(t,'тысяча','тысячи','тысяч')+' '; n%=1000; }
+  if (n>0) res+=chunk(n,false);
+  res = res.trim();
+  if (!res) return '';
+  res = res[0].toUpperCase()+res.slice(1);
+  const cw = {'₽':'рублей','$':'долларов','€':'евро','₸':'тенге'}[cur]||'';
+  return res + (cw ? ' ' + cw : '');
+}
+
+// ─── Animate counter ─────────────────────────────────────────
+function animCount(el, target, cur, ms) {
+  ms = ms || 800;
+  const t0 = performance.now();
+  function step(t) {
+    const p = Math.min((t-t0)/ms, 1);
+    const e = 1-Math.pow(1-p,3);
+    el.textContent = fmt(target*e, cur);
+    if (p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// ─── Render results ──────────────────────────────────────────
+function renderResults(r, cur, anim) {
+  cur = cur || cfg.currency;
+  document.getElementById('results').classList.add('visible');
+
+  // Headers
+  document.getElementById('l1src').textContent = fmt(r.total, cur);
+  document.getElementById('l2src').textContent = fmt(r.familyIncome, cur);
+
+  // Percents
+  document.getElementById('pctCharity').textContent = cfg.percentages.charity + '%';
+  document.getElementById('pctParents').textContent  = cfg.percentages.parents + '%';
+  document.getElementById('pctFuture').textContent   = cfg.percentages.future + '%';
+  document.getElementById('pctFun').textContent      = cfg.percentages.fun + '%';
+
+  // Account labels
+  if (accs.future)   document.getElementById('whereCapital').textContent = accs.capital || 'Инвестиции — не тратить';
+  if (accs.future)   document.getElementById('whereFuture').textContent  = accs.future;
+  if (accs.fun)      document.getElementById('whereFun').textContent     = accs.fun;
+
+  // Amounts
+  const pairs = [
+    ['amtCharity',  r.charityAmt],
+    ['amtParents',  r.parentsAmt],
+    ['amtFamily',   r.familyIncome],
+    ['amtFuture',   r.futureAmt],
+    ['amtFun',      r.funAmt],
+    ['amtMonthly',  r.monthlyIncome],
+    ['amtCompany',  r.companyAmt],
+    ['amtOwn',      r.ownAmt],
+    ['amtCapital',  r.capitalAmt],
+    ['amtDream',    r.dreamAmt],
+    ['amtBigDream', r.bigDreamAmt],
+    ['amtSmallDream',r.smallDreamAmt],
+    ['amtNecessity',r.necessityAmt],
+    ['amtUnexpected',r.unexpectedAmt],
+  ];
+  pairs.forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (anim) animCount(el, val, cur);
+    else el.textContent = fmt(val, cur);
+  });
+
+  // Progress bars
+  setTimeout(() => {
+    const bc = document.getElementById('barCompany');
+    const bo = document.getElementById('barOwn');
+    if (bc) bc.style.width = '55%';
+    if (bo) bo.style.width = '45%';
+  }, anim ? 300 : 0);
+
+  // Animate level blocks
+  const blocks = ['lvl1','lvl2','lvl3company','lvl3own'];
+  if (anim) {
+    blocks.forEach(id => { const el=document.getElementById(id); if(el) el.classList.remove('show'); });
+    const delays = [50, 250, 450, 560];
+    blocks.forEach((id,i) => setTimeout(() => { const el=document.getElementById(id); if(el) el.classList.add('show'); }, delays[i]));
+  } else {
+    blocks.forEach(id => { const el=document.getElementById(id); if(el) el.classList.add('show'); });
+  }
+}
+
+// ─── Toast ───────────────────────────────────────────────────
+function toast(msg, ms) {
+  ms = ms || 3000;
+  const box = document.getElementById('toastBox');
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  box.appendChild(el);
+  setTimeout(() => {
+    el.classList.add('out');
+    setTimeout(() => el.remove(), 300);
+  }, ms);
+}
+
+// ─── Navigation ──────────────────────────────────────────────
+function goScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const sc = document.getElementById('screen-' + id);
+  if (sc) sc.classList.add('active');
+  document.querySelectorAll(`[data-screen="${id}"]`).forEach(n => n.classList.add('active'));
+
+  if (id === 'chart') {
+    if (lastResult) {
+      document.getElementById('chartEmpty').style.display = 'none';
+      document.getElementById('chartContent').style.display = 'block';
+      const donutActive = document.getElementById('paneDonut').classList.contains('active');
+      if (donutActive) drawDonut(lastResult);
+      else drawFlow(lastResult);
+    } else {
+      document.getElementById('chartEmpty').style.display = 'block';
+      document.getElementById('chartContent').style.display = 'none';
+    }
+  }
+}
+
+// ─── Income words ────────────────────────────────────────────
+let debTimer = null;
+function updateWords() {
+  const v = parseFloat(document.getElementById('incomeInput').value);
+  const cur = document.getElementById('curSelect').value;
+  document.getElementById('incomeWords').textContent = v > 0 ? toWords(v, cur) : '';
+}
+
+function doCalc() {
+  const v = parseFloat(document.getElementById('incomeInput').value);
+  const cur = document.getElementById('curSelect').value;
+  if (!v || v <= 0) { toast('⚠️ Введите сумму дохода'); return; }
+  const r = calculate(v, cfg.percentages);
+  lastResult = r;
+  cfg.lastIncome = v;
+  cfg.currency = cur;
+  saveSettings();
+  renderResults(r, cur, true);
+  saveToHistory(v, cur, r);
+  toast('✅ Расчёт сохранён');
+}
+
+// ─── History ─────────────────────────────────────────────────
+function saveToHistory(v, cur, r) {
+  hist.unshift({ id: Date.now().toString(36), date: new Date().toISOString(), total: v, currency: cur, result: r });
+  if (hist.length > 50) hist = hist.slice(0, 50);
+  saveHistory();
+  renderHistory();
+}
+
+function renderHistory() {
+  const el = document.getElementById('histList');
+  if (!el) return;
+  if (!hist.length) { el.innerHTML = '<div class="hist-empty">📋 Ещё нет расчётов</div>'; return; }
+  el.innerHTML = hist.map(h => {
+    const d = new Date(h.date);
+    return `<div class="hist-item" data-id="${h.id}">
+      <div style="flex:1">
+        <div class="hist-amt">${fmt(h.total, h.currency)}</div>
+        <div class="hist-date">${d.toLocaleDateString('ru-RU',{day:'numeric',month:'short',year:'numeric'})} · ${d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}</div>
+      </div>
+      <span style="color:var(--gray-muted);font-size:18px">›</span>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.hist-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const entry = hist.find(h => h.id === item.dataset.id);
+      if (!entry) return;
+      document.getElementById('incomeInput').value = entry.total;
+      document.getElementById('curSelect').value = entry.currency;
+      updateWords();
+      const r = calculate(entry.total, cfg.percentages);
+      lastResult = r;
+      renderResults(r, entry.currency, true);
+      toast('📋 Данные восстановлены');
+      goScreen('home');
+    });
+  });
+}
+
+// ─── Donut chart ─────────────────────────────────────────────
+function drawDonut(r) {
+  const canvas = document.getElementById('donutCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const sz = 260;
+  canvas.width = sz * dpr; canvas.height = sz * dpr;
+  canvas.style.width = sz + 'px'; canvas.style.height = sz + 'px';
+  ctx.scale(dpr, dpr);
+  const cx = sz/2, cy = sz/2, OR = 105, IR = 62, GAP = 0.025;
+
+  const segs = [
+    {label:'Благотворительность', val:r.charityAmt,    color:'#EC4899'},
+    {label:'Родителям',           val:r.parentsAmt,     color:'#F59E0B'},
+    {label:'Деньги будущего',     val:r.futureAmt,      color:'#3B82F6'},
+    {label:'Развлечения',         val:r.funAmt,         color:'#00C896'},
+    {label:'Капитал',             val:r.capitalAmt,     color:'#2563EB'},
+    {label:'Крупные мечты',       val:r.bigDreamAmt,    color:'#7C3AED'},
+    {label:'Мелкие мечты',        val:r.smallDreamAmt,  color:'#A855F7'},
+    {label:'Необходимое',         val:r.necessityAmt,   color:'#C9A84C'},
+    {label:'Непредвиденное',      val:r.unexpectedAmt,  color:'#E53E3E'},
+  ].filter(s => s.val > 0);
+
+  const total = segs.reduce((s,a) => s+a.val, 0);
+  const t0 = performance.now();
+
+  function frame(t) {
+    const prog = Math.min((t-t0)/500, 1);
+    const ease = 1-Math.pow(1-prog, 2);
+    ctx.clearRect(0, 0, sz, sz);
+    let a = -Math.PI/2, rem = Math.PI*2*ease;
+    segs.forEach(seg => {
+      if (rem <= 0) return;
+      const full = (seg.val/total)*Math.PI*2;
+      const draw = Math.min(full-GAP, rem);
+      if (draw <= 0) { rem-=full; return; }
+      ctx.beginPath();
+      ctx.arc(cx, cy, OR, a+GAP/2, a+full-GAP/2);
+      ctx.arc(cx, cy, IR, a+full-GAP/2, a+GAP/2, true);
+      ctx.closePath();
+      ctx.fillStyle = seg.color;
+      ctx.fill();
+      a += full; rem -= full;
+    });
+    // Center label
+    if (prog > 0.7) {
+      const alpha = Math.min(1,(prog-0.7)/0.3);
+      ctx.save(); ctx.globalAlpha = alpha;
+      ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = '600 14px Inter,sans-serif';
+      ctx.fillText(fmt(r.monthlyIncome), cx, cy-8);
+      ctx.font = '300 11px Inter,sans-serif';
+      ctx.fillStyle = '#B8BCC8';
+      ctx.fillText('месячный доход', cx, cy+10);
+      ctx.restore();
+    }
+    if (prog < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  // Legend
+  const leg = document.getElementById('donutLegend');
+  leg.innerHTML = segs.map(s =>
+    `<div class="legend-item">
+      <div class="legend-dot" style="background:${s.color}"></div>
+      <span class="legend-name">${s.label}</span>
+      <span class="legend-amt">${fmt(s.val)}</span>
+      <span class="legend-pct">${(s.val/r.total*100).toFixed(1)}%</span>
+    </div>`).join('');
+
+  // Tooltip
+  const tip = document.getElementById('tooltip');
+  canvas.onmousemove = e => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX-rect.left-cx, my = e.clientY-rect.top-cy;
+    const dist = Math.sqrt(mx*mx+my*my);
+    if (dist >= IR && dist <= OR) {
+      let ang = Math.atan2(my, mx)+Math.PI/2;
+      if (ang < 0) ang += Math.PI*2;
+      let sa = 0;
+      for (const seg of segs) {
+        const fa = (seg.val/total)*Math.PI*2;
+        if (ang >= sa && ang < sa+fa) {
+          tip.style.display = 'block';
+          tip.style.left = (e.clientX+12)+'px';
+          tip.style.top  = (e.clientY-20)+'px';
+          tip.innerHTML  = `<b style="color:${seg.color}">${seg.label}</b><br>${fmt(seg.val)} · ${(seg.val/r.total*100).toFixed(1)}%`;
+          return;
+        }
+        sa += fa;
+      }
+    }
+    tip.style.display = 'none';
+  };
+  canvas.onmouseleave = () => { tip.style.display = 'none'; };
+}
+
+// ─── Flow tree ───────────────────────────────────────────────
+function drawFlow(r) {
+  const svg = document.getElementById('flowSvg');
+  const cur = cfg.currency;
+  const NW=110, NH=54, XS=130, YS=88;
+
+  const nodes = [
+    {id:'total',   label:'Общий доход',   amt:r.total,         color:'#C9A84C', em:'💰', col:2.5, row:0},
+    {id:'charity', label:'Благотв.',      amt:r.charityAmt,    color:'#EC4899', em:'🤲', col:0.5, row:1},
+    {id:'parents', label:'Родителям',     amt:r.parentsAmt,    color:'#F59E0B', em:'👨‍👩‍👧', col:2.5, row:1},
+    {id:'family',  label:'Семейный',      amt:r.familyIncome,  color:'#C9A84C', em:'🏡', col:4.5, row:1},
+    {id:'future',  label:'Будущее',       amt:r.futureAmt,     color:'#3B82F6', em:'🏦', col:0.5, row:2},
+    {id:'fun',     label:'Развлечения',   amt:r.funAmt,        color:'#00C896', em:'🎉', col:2.5, row:2},
+    {id:'monthly', label:'Месячный',      amt:r.monthlyIncome, color:'#C9A84C', em:'📅', col:4.5, row:2},
+    {id:'company', label:'Компания 55%',  amt:r.companyAmt,    color:'#C9A84C', em:'👑', col:1,   row:3},
+    {id:'own',     label:'Личное 45%',    amt:r.ownAmt,        color:'#78A078', em:'🏠', col:3.8, row:3},
+    {id:'capital', label:'Капитал 80%',   amt:r.capitalAmt,    color:'#3B82F6', em:'💰', col:0.2, row:4},
+    {id:'dream',   label:'Мечта 20%',     amt:r.dreamAmt,      color:'#9B59B6', em:'✨', col:1.8, row:4},
+    {id:'nec',     label:'Необход. 90%',  amt:r.necessityAmt,  color:'#C9A84C', em:'🛒', col:3.5, row:4},
+    {id:'unexp',   label:'Непредв. 10%',  amt:r.unexpectedAmt, color:'#E53E3E', em:'⚡', col:4.8, row:4},
+    {id:'big',     label:'Кр.мечты 50%',  amt:r.bigDreamAmt,   color:'#7C3AED', em:'🏠', col:1.2, row:5},
+    {id:'small',   label:'Мл.мечты 50%',  amt:r.smallDreamAmt, color:'#A855F7', em:'🎁', col:2.5, row:5},
+  ];
+
+  const edges = [
+    ['total','charity'],['total','parents'],['total','family'],
+    ['family','future'],['family','fun'],['family','monthly'],
+    ['monthly','company'],['monthly','own'],
+    ['company','capital'],['company','dream'],
+    ['own','nec'],['own','unexp'],
+    ['dream','big'],['dream','small'],
+  ];
+
+  const W = 6*XS, H = 6*YS;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('width', W); svg.setAttribute('height', H);
+  svg.style.minWidth = W+'px';
+
+  const map = {};
+  nodes.forEach(n => {
+    n.px = n.col*XS; n.py = n.row*YS;
+    map[n.id] = n;
+  });
+
+  let html = `<defs><style>
+    @keyframes fnIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+  </style></defs>`;
+
+  edges.forEach(([f,t]) => {
+    const fn=map[f], tn=map[t]; if(!fn||!tn) return;
+    const x1=fn.px+NW/2, y1=fn.py+NH, x2=tn.px+NW/2, y2=tn.py;
+    const cy1=y1+(y2-y1)*0.4, cy2=y2-(y2-y1)*0.4;
+    html += `<path d="M${x1},${y1} C${x1},${cy1} ${x2},${cy2} ${x2},${y2}" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>`;
+  });
+
+  nodes.forEach((n,i) => {
+    html += `<g style="opacity:0;animation:fnIn .3s ease ${i*50}ms forwards">
+      <rect x="${n.px}" y="${n.py}" width="${NW}" height="${NH}" rx="8" fill="${n.color}20" stroke="${n.color}55" stroke-width="1"/>
+      <text x="${n.px+NW/2}" y="${n.py+17}" text-anchor="middle" fill="${n.color}" font-family="Inter,sans-serif" font-size="10" font-weight="600">${n.em} ${n.label}</text>
+      <text x="${n.px+NW/2}" y="${n.py+36}" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="11" font-weight="500">${fmt(n.amt,cur)}</text>
+    </g>`;
+  });
+
+  svg.innerHTML = html;
+}
+
+// ─── Settings UI ─────────────────────────────────────────────
+function loadSettingsUI() {
+  document.getElementById('sName').value = cfg.name || '';
+  const r = document.querySelector(`input[name="sCur"][value="${cfg.currency}"]`);
+  if (r) r.checked = true;
+
+  ['Charity','Parents','Future','Fun'].forEach(k => {
+    const lk = k[0].toLowerCase()+k.slice(1);
+    const sr = document.getElementById('sr'+k);
+    const sv = document.getElementById('sv'+k);
+    if (sr) sr.value = cfg.percentages[lk];
+    if (sv) sv.textContent = cfg.percentages[lk]+'%';
+  });
+
+  Object.keys(accs).forEach(k => {
+    const el = document.getElementById('an_'+k);
+    if (el) el.value = accs[k] || '';
+  });
+  updateSliderAmounts();
+}
+
+function updateSliderAmounts() {
+  if (!cfg.lastIncome) return;
+  const inc = cfg.lastIncome;
+  const cAmt = inc*(cfg.percentages.charity/100);
+  const pAmt = inc*(cfg.percentages.parents/100);
+  const fam  = inc - cAmt - pAmt;
+  const fuAmt = fam*(cfg.percentages.future/100);
+  const fnAmt = fam*(cfg.percentages.fun/100);
+  const els = {saCharity:cAmt, saParents:pAmt, saFuture:fuAmt, saFun:fnAmt};
+  Object.entries(els).forEach(([id,v]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '≈ ' + fmt(v);
+  });
+}
+
+function applyName() {
+  const g = document.getElementById('headerGreeting');
+  g.textContent = cfg.name ? `Привет, ${cfg.name} 👋` : '';
+}
+
+// ─── Onboarding ───────────────────────────────────────────────
+function checkOnboarding() {
+  if (!cfg.onboarded) {
+    document.getElementById('onboarding').classList.remove('gone');
+  } else {
+    document.getElementById('onboarding').classList.add('gone');
+    applyName();
+  }
+}
+
+// ─── Init ─────────────────────────────────────────────────────
+function init() {
+  loadStorage();
+  checkOnboarding();
+  renderHistory();
+  loadSettingsUI();
+
+  // Restore last income
+  if (cfg.lastIncome && cfg.onboarded) {
+    document.getElementById('incomeInput').value = cfg.lastIncome;
+    document.getElementById('curSelect').value = cfg.currency;
+    updateWords();
+    const r = calculate(cfg.lastIncome, cfg.percentages);
+    lastResult = r;
+    renderResults(r, cfg.currency, false);
+  }
+
+  // — Onboarding —
+  document.getElementById('btnStart').addEventListener('click', () => {
+    const n = document.getElementById('obName').value.trim();
+    cfg.name = n; cfg.onboarded = true;
+    saveSettings();
+    document.getElementById('onboarding').classList.add('gone');
+    applyName();
+    toast(`Добро пожаловать${n?', '+n:''}! 🎉`);
+  });
+
+  // — Income —
+  document.getElementById('incomeInput').addEventListener('input', () => {
+    updateWords();
+    clearTimeout(debTimer);
+    debTimer = setTimeout(() => {
+      const v = parseFloat(document.getElementById('incomeInput').value);
+      if (v > 0) {
+        const cur = document.getElementById('curSelect').value;
+        const r = calculate(v, cfg.percentages);
+        lastResult = r; cfg.lastIncome = v;
+        renderResults(r, cur, false);
+      }
+    }, 400);
+  });
+
+  document.getElementById('curSelect').addEventListener('change', () => {
+    updateWords();
+    cfg.currency = document.getElementById('curSelect').value;
+    saveSettings();
+    if (lastResult) renderResults(lastResult, cfg.currency, false);
+  });
+
+  document.getElementById('btnCalc').addEventListener('click', doCalc);
+
+  // — Nav —
+  document.querySelectorAll('.nav-item').forEach(n =>
+    n.addEventListener('click', () => goScreen(n.dataset.screen)));
+  document.getElementById('btnGoSettings').addEventListener('click', () => goScreen('settings'));
+
+  // — History —
+  document.getElementById('btnClearHist').addEventListener('click', () => {
+    if (!confirm('Очистить всю историю?')) return;
+    hist = []; saveHistory(); renderHistory();
+    toast('🗑 История очищена');
+  });
+
+  // — Chart tabs —
+  document.getElementById('tabDonut').addEventListener('click', () => {
+    document.getElementById('tabDonut').classList.add('active');
+    document.getElementById('tabFlow').classList.remove('active');
+    document.getElementById('paneDonut').classList.add('active');
+    document.getElementById('paneFlow').classList.remove('active');
+    if (lastResult) drawDonut(lastResult);
+  });
+  document.getElementById('tabFlow').addEventListener('click', () => {
+    document.getElementById('tabFlow').classList.add('active');
+    document.getElementById('tabDonut').classList.remove('active');
+    document.getElementById('paneFlow').classList.add('active');
+    document.getElementById('paneDonut').classList.remove('active');
+    if (lastResult) drawFlow(lastResult);
+  });
+
+  // — Settings: name —
+  document.getElementById('sName').addEventListener('input', e => {
+    cfg.name = e.target.value.trim(); saveSettings(); applyName();
+  });
+
+  // — Settings: currency —
+  document.querySelectorAll('input[name="sCur"]').forEach(r =>
+    r.addEventListener('change', e => {
+      cfg.currency = e.target.value;
+      document.getElementById('curSelect').value = e.target.value;
+      saveSettings();
+      if (lastResult) renderResults(lastResult, cfg.currency, false);
+      updateSliderAmounts();
+    }));
+
+  // — Sliders —
+  ['Charity','Parents','Future','Fun'].forEach(k => {
+    const sr = document.getElementById('sr'+k);
+    if (!sr) return;
+    sr.addEventListener('input', () => {
+      const v = parseFloat(sr.value);
+      const lk = k[0].toLowerCase()+k.slice(1);
+      cfg.percentages[lk] = v;
+      document.getElementById('sv'+k).textContent = v+'%';
+      saveSettings(); updateSliderAmounts();
+      if (cfg.lastIncome) {
+        const r = calculate(cfg.lastIncome, cfg.percentages);
+        lastResult = r; renderResults(r, cfg.currency, false);
+      }
+    });
+  });
+
+  document.getElementById('btnResetPct').addEventListener('click', () => {
+    cfg.percentages = {...DEF_PCT}; saveSettings(); loadSettingsUI();
+    if (cfg.lastIncome) {
+      const r = calculate(cfg.lastIncome, cfg.percentages);
+      lastResult = r; renderResults(r, cfg.currency, false);
+    }
+    toast('↩ Значения сброшены по книге');
+  });
+
+  // — Account names —
+  ['capital','bigDream','smallDream','future','fun'].forEach(k => {
+    const el = document.getElementById('an_'+k);
+    if (!el) return;
+    el.addEventListener('input', () => { accs[k] = el.value.trim(); saveAccounts(); });
+  });
+
+  // — Export —
+  document.getElementById('btnExport').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify({cfg,hist,accs,at:new Date().toISOString()},null,2)],{type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'ya-i-dengi.json'; a.click();
+    URL.revokeObjectURL(a.href);
+    toast('📤 Данные экспортированы');
+  });
+
+  document.getElementById('btnImportTrigger').addEventListener('click', () =>
+    document.getElementById('fileImport').click());
+
+  document.getElementById('fileImport').addEventListener('change', e => {
+    const f = e.target.files[0]; if (!f) return;
+    const fr = new FileReader();
+    fr.onload = ev => {
+      try {
+        const d = JSON.parse(ev.target.result);
+        if (d.cfg)  cfg  = {...DEF_SETTINGS,...d.cfg, percentages:{...DEF_PCT,...d.cfg.percentages}};
+        if (d.hist) hist = d.hist;
+        if (d.accs) accs = d.accs;
+        saveSettings(); saveHistory(); saveAccounts();
+        loadSettingsUI(); renderHistory(); applyName();
+        toast('📥 Данные импортированы');
+      } catch { toast('❌ Ошибка формата файла'); }
+    };
+    fr.readAsText(f); e.target.value = '';
+  });
+
+  document.getElementById('btnDeleteAll').addEventListener('click', () => {
+    if (!confirm('Удалить ВСЕ данные? Это нельзя отменить.')) return;
+    Object.values(LS).forEach(k => localStorage.removeItem(k));
+    cfg = deepClone(DEF_SETTINGS); hist = []; accs = {}; lastResult = null;
+    document.getElementById('incomeInput').value = '';
+    document.getElementById('incomeWords').textContent = '';
+    document.getElementById('results').classList.remove('visible');
+    loadSettingsUI(); renderHistory(); checkOnboarding();
+    toast('🗑 Все данные удалены');
+  });
+
+  // — PWA —
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault(); deferredInstall = e;
+    document.getElementById('installBanner').classList.add('on');
+  });
+  document.getElementById('btnInstall').addEventListener('click', async () => {
+    if (!deferredInstall) return;
+    deferredInstall.prompt();
+    await deferredInstall.userChoice;
+    deferredInstall = null;
+    document.getElementById('installBanner').classList.remove('on');
+  });
+  document.getElementById('btnInstallX').addEventListener('click', () =>
+    document.getElementById('installBanner').classList.remove('on'));
+
+  // — SW —
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
