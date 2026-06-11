@@ -1,9 +1,9 @@
-const CACHE_NAME = 'ya-i-dengi-v6';
+const CACHE_NAME = 'osoznannye-dengi-v7';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600&display=swap'
+  './',
+  './index.html',
+  './manifest.json',
+  'https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap'
 ];
 
 self.addEventListener('install', e => {
