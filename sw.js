@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ya-i-dengi-v1';
+const CACHE_NAME = 'ya-i-dengi-v6';
 const ASSETS = [
   '/',
   '/index.html',
