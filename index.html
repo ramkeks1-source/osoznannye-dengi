@@ -774,6 +774,7 @@
     /* Радиусы по спеке */
     .level-block, .l3-card, .income-block, .s-card, .chart-card, .onb-card { border-radius: 18px; }
     .acc-row, .l3-child, .l3-grand { border-radius: 11px; }
+    .l3-base-hdr { margin: 4px 2px 10px; }
 
     /* Подпись студии */
     .app-credit { text-align: center; margin: 28px 0 8px; }
@@ -830,7 +831,7 @@
 <div id="onboarding">
   <div class="ob-em" data-ic="wallet" data-ic-head data-ic-size="40"></div>
   <h1 class="ob-title">Осознанные Деньги</h1>
-  <p class="ob-desc">Система распределения финансов из книги «Я и деньги 2». 3 уровня — и ты точно знаешь, куда уходит каждый рубль.</p>
+  <p class="ob-desc">Система распределения финансов по 3 уровням — ты точно знаешь, куда уходит каждый рубль.</p>
   <div class="ob-levels">
     <div class="ob-lvl">
       <div class="ob-lvl-n">1</div>
@@ -958,6 +959,7 @@
         </div>
 
         <!-- Level 3 -->
+        <div class="level-hdr l3-base-hdr">Из месячного дохода: <span id="l3src">—</span></div>
         <div class="l3-grid">
 
           <!-- Company -->
@@ -1135,8 +1137,8 @@
             <div class="slider-subt" id="saFun"></div>
             <input type="range" id="srFun" min="5" max="20" step="1" value="10">
           </div>
-          <p class="settings-note">Уровень 3 фиксирован по книге: Компания 55% / Личное 45% → Капитал 80% / Мечта 20% → Крупные 50% / Мелкие 50% → Необходимое 90% / Непредвид. 10%</p>
-          <button class="btn-reset" id="btnResetPct">Сбросить к значениям книги</button>
+          <p class="settings-note">Уровень 3 фиксирован по методу: Компания 55% / Личное 45% → Капитал 80% / Мечта 20% → Крупные 50% / Мелкие 50% → Необходимое 90% / Непредвид. 10%</p>
+          <button class="btn-reset" id="btnResetPct">Сбросить к стандартным значениям</button>
         </div>
       </div>
 
@@ -1282,6 +1284,7 @@ const I18N = {
   "Родителям":"Parents", "Напрямую родителям":"Directly to parents",
   "→ Семейный доход":"→ Family income",
   "Из семейного дохода:":"From family income:",
+  "Из месячного дохода:":"From monthly income:",
   "Деньги будущего":"Future money", "Отдельный счёт в банке":"Separate bank account",
   "Развлечения":"Fun", "→ Месячный доход":"→ Monthly income",
   "Счёт компании":"Company account", "Завтрашние деньги":"Tomorrow's money",
@@ -1298,9 +1301,9 @@ const I18N = {
   "Настройки":"Settings", "Расчёт":"Home", "График":"Charts",
   "Личные данные":"Personal data", "Ваше имя":"Your name", "Валюта":"Currency",
   "Настраиваемые проценты":"Custom percentages",
-  "Уровень 3 фиксирован по книге: Компания 55% / Личное 45% → Капитал 80% / Мечта 20% → Крупные 50% / Мелкие 50% → Необходимое 90% / Непредвид. 10%":
-    "Level 3 is fixed per the book: Company 55% / Personal 45% → Capital 80% / Dream 20% → Big 50% / Small 50% → Essentials 90% / Unexpected 10%",
-  "Сбросить к значениям книги":"Reset to book values",
+  "Уровень 3 фиксирован по методу: Компания 55% / Личное 45% → Капитал 80% / Мечта 20% → Крупные 50% / Мелкие 50% → Необходимое 90% / Непредвид. 10%":
+    "Level 3 is fixed by the method: Company 55% / Personal 45% → Capital 80% / Dream 20% → Big 50% / Small 50% → Essentials 90% / Unexpected 10%",
+  "Сбросить к стандартным значениям":"Reset to default values",
   "Мои банковские счета":"My bank accounts",
   "Капитал (банк)":"Capital (bank)", "Крупные мечты (банк)":"Big dreams (bank)",
   "Мелкие мечты (дома)":"Small dreams (home)", "Деньги будущего (банк)":"Future money (bank)",
@@ -1308,8 +1311,8 @@ const I18N = {
   "Управление данными":"Data management",
   "Экспорт данных в JSON":"Export data to JSON", "Импорт данных из JSON":"Import data from JSON",
   "Удалить все данные":"Delete all data",
-  "Система распределения финансов из книги «Я и деньги 2». 3 уровня — и ты точно знаешь, куда уходит каждый рубль.":
-    "A money-distribution system from the book “Me & Money 2”. Three levels — so you always know where every ruble goes.",
+  "Система распределения финансов по 3 уровням — ты точно знаешь, куда уходит каждый рубль.":
+    "A 3-level money distribution system — you always know where every ruble goes.",
   "Отдаём сразу":"Give right away", "Благотворительность + Родителям → Семейный доход":"Charity + Parents → Family income",
   "Откладываем в банк":"Put aside in the bank", "Деньги будущего + Развлечения → Месячный доход":"Future money + Fun → Monthly income",
   "Распределяем остаток":"Distribute the rest", "Счёт компании 55% + Собственный счёт 45%":"Company account 55% + Own account 45%",
@@ -1328,7 +1331,7 @@ const I18N = {
   "📤 Данные экспортированы":"📤 Data exported",
   "📥 Данные импортированы":"📥 Data imported",
   "❌ Ошибка формата файла":"❌ Wrong file format",
-  "↩ Значения сброшены по книге":"↩ Reset to book values",
+  "↩ Значения сброшены":"↩ Reset to default values",
   "🗑 Все данные удалены":"🗑 All data deleted",
   "Ещё нет расчётов":"No calculations yet",
   "Создано командой ФОРМА →":"Made by FORMA studio →",
@@ -1475,10 +1478,30 @@ function calculate(total, pct) {
   const smallDreamAmt = dreamAmt * 0.50;
   const necessityAmt  = ownAmt * 0.90;
   const unexpectedAmt = ownAmt * 0.10;
-  return { total, charityAmt, parentsAmt, familyIncome,
-           futureAmt, funAmt, monthlyIncome,
-           companyAmt, ownAmt, capitalAmt, dreamAmt,
-           bigDreamAmt, smallDreamAmt, necessityAmt, unexpectedAmt };
+
+  // Округляем до рубля и сводим: сумма всех листовых кувшинов = ровно доход.
+  // Расхождение округления (±1-2 ₽) поглощает «Необходимое».
+  const T = Math.round(total);
+  const charity = Math.round(charityAmt), parents = Math.round(parentsAmt),
+        future = Math.round(futureAmt),  fun = Math.round(funAmt),
+        capital = Math.round(capitalAmt), big = Math.round(bigDreamAmt),
+        small = Math.round(smallDreamAmt), unexp = Math.round(unexpectedAmt);
+  let nec = Math.round(necessityAmt);
+  const leafSum = charity + parents + future + fun + capital + big + small + nec + unexp;
+  nec += (T - leafSum); // сводим к доходу без потери рублей
+  const dream = big + small;
+  const company = capital + dream;
+  const own = nec + unexp;
+  return {
+    total: T, charityAmt: charity, parentsAmt: parents,
+    familyIncome: T - charity - parents,
+    futureAmt: future, funAmt: fun,
+    monthlyIncome: company + own,
+    companyAmt: company, ownAmt: own,
+    capitalAmt: capital, dreamAmt: dream,
+    bigDreamAmt: big, smallDreamAmt: small,
+    necessityAmt: nec, unexpectedAmt: unexp
+  };
 }
 
 // ─── Format ──────────────────────────────────────────────────
@@ -1549,6 +1572,7 @@ function renderResults(r, cur, anim) {
   // Headers
   document.getElementById('l1src').textContent = fmt(r.total, cur);
   document.getElementById('l2src').textContent = fmt(r.familyIncome, cur);
+  const l3s = document.getElementById('l3src'); if (l3s) l3s.textContent = fmt(r.monthlyIncome, cur);
 
   // Percents
   document.getElementById('pctCharity').textContent = cfg.percentages.charity + '%';
@@ -2216,7 +2240,7 @@ function init() {
       const r = calculate(cfg.lastIncome, cfg.percentages);
       lastResult = r; renderResults(r, cfg.currency, false);
     }
-    toast('↩ Значения сброшены по книге');
+    toast('↩ Значения сброшены');
   });
 
   // — Account names —

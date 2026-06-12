@@ -1,4 +1,4 @@
-const CACHE_NAME = 'osoznannye-dengi-v7';
+const CACHE_NAME = 'osoznannye-dengi-v8';
 const ASSETS = [
   './',
   './index.html',
