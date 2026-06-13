@@ -543,8 +543,9 @@
     #onboarding {
       position: fixed; inset: 0; background: var(--bg-primary);
       z-index: 500; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
+      align-items: center; justify-content: flex-start;
       padding: 2rem; text-align: center;
+      overflow-y: auto;
     }
     #onboarding.gone { display: none; }
     .ob-em { font-size: 64px; margin-bottom: 1.25rem; }
@@ -2474,7 +2475,19 @@ function init() {
 
   // — SW — только по http/https (на file:// он не поддерживается и сыпет ошибкой в консоль)
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+    navigator.serviceWorker.register('sw.js').then(reg => {
+      // Проверяем обновление при каждом открытии
+      reg.update();
+      reg.addEventListener('updatefound', () => {
+        const newWorker = reg.installing;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'activated') {
+            // Новый SW активен — перезагружаем страницу чтобы получить свежую версию
+            window.location.reload();
+          }
+        });
+      });
+    }).catch(() => {});
   }
 }
 
