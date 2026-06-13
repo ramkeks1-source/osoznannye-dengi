@@ -1,4 +1,4 @@
-const CACHE_NAME = 'osoznannye-dengi-v9';
+const CACHE_NAME = 'osoznannye-dengi-v10';
 const STATIC_ASSETS = [
   './manifest.json',
   'https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap'
@@ -13,11 +13,12 @@ self.addEventListener('install', e => {
 
 self.addEventListener('activate', e => {
   e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-    )
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
+      .then(() => self.clients.matchAll({ includeUncontrolled: true, type: 'window' }))
+      .then(clients => Promise.all(clients.map(client => client.navigate(client.url))))
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', e => {
