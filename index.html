@@ -2476,18 +2476,20 @@ function init() {
   // — SW — только по http/https (на file:// он не поддерживается и сыпет ошибкой в консоль)
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
     navigator.serviceWorker.register('sw.js').then(reg => {
-      // Проверяем обновление при каждом открытии
-      reg.update();
+      reg.update(); // всегда проверяем обновление при загрузке
       reg.addEventListener('updatefound', () => {
-        const newWorker = reg.installing;
-        newWorker.addEventListener('statechange', () => {
-          if (newWorker.state === 'activated') {
-            // Новый SW активен — перезагружаем страницу чтобы получить свежую версию
-            window.location.reload();
-          }
+        const nw = reg.installing;
+        nw.addEventListener('statechange', () => {
+          if (nw.state === 'activated') window.location.reload();
         });
       });
     }).catch(() => {});
+
+    // Запасной канал — SW шлёт сообщение "перезагрузись"
+    if ('BroadcastChannel' in window) {
+      const bc = new BroadcastChannel('sw-reload');
+      bc.onmessage = () => { bc.close(); window.location.reload(true); };
+    }
   }
 }
 
