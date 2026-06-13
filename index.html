@@ -803,6 +803,16 @@
     .btn-author:hover { background: var(--bg-hover); }
     .btn-author-sub { font-size: 12px; color: var(--muted); font-weight: 400; margin-top: 1px; }
 
+    .btn-tutorial {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; border: 0.5px solid var(--border);
+      border-radius: var(--radius-md); padding: 10px 20px;
+      font-size: 14px; font-weight: 500; color: var(--secondary);
+      cursor: pointer; text-decoration: none; margin-bottom: 1.25rem;
+      transition: all 0.2s;
+    }
+    .btn-tutorial:hover { border-color: var(--btn-bg); color: var(--white); }
+
     /* Чекбокс согласия в онбординге */
     .ob-consent {
       display: flex; align-items: flex-start; gap: 12px;
@@ -911,6 +921,9 @@
   </div>
   <input class="ob-input" id="obName" type="text" placeholder="Как тебя зовут? (необязательно)" maxlength="30">
   <input class="ob-input" id="obContact" type="text" placeholder="Телефон или email (необязательно)" maxlength="60" style="margin-bottom:1rem">
+  <a class="btn-tutorial" href="https://youtu.be/u3Po_gzPbBA" target="_blank" rel="noopener">
+    ▶ Как пользоваться — смотреть видео
+  </a>
   <label class="ob-consent" for="obConsent">
     <input type="checkbox" id="obConsent" class="ob-consent-check">
     <span class="ob-consent-text">Согласен на обработку персональных данных и получение сообщений от автора</span>
@@ -1220,6 +1233,13 @@
             <div>
               <div>Написать автору</div>
               <div class="btn-author-sub">Telegram: @getadreams</div>
+            </div>
+          </a>
+          <a href="https://youtu.be/u3Po_gzPbBA" target="_blank" rel="noopener" class="btn-author" style="margin-top:8px">
+            <span style="font-size:22px">▶️</span>
+            <div>
+              <div>Как пользоваться</div>
+              <div class="btn-author-sub">Видео-инструкция на YouTube</div>
             </div>
           </a>
         </div>
