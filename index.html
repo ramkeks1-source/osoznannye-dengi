@@ -43,26 +43,26 @@
       --card:        #221D19;
       --inset:       #2A241E;
       --nav-bg:      #181411;
-      --border:      rgba(236,228,214,0.06);
-      --divider:     rgba(236,228,214,0.05);
-      --total-line:  rgba(236,228,214,0.10);
-      --text:        #ECE4D6;
-      --text-2:      #E2DAC9;
-      --secondary:   #C9BFAD;
-      --muted:       #8A8174;
-      --faint:       #7C7363;
-      --icon-stroke: #C9BFAD;
-      --icon-head:   #ECE4D6;
-      --nav-inactive:#6E665A;
-      --btn-bg:      #ECE4D6;
+      --border:      rgba(240,240,239,0.07);
+      --divider:     rgba(240,240,239,0.05);
+      --total-line:  rgba(240,240,239,0.10);
+      --text:        #F0F0EF;
+      --text-2:      #E3E3E2;
+      --secondary:   #ABABAA;
+      --muted:       #888887;
+      --faint:       #7A7A79;
+      --icon-stroke: #ABABAA;
+      --icon-head:   #F0F0EF;
+      --nav-inactive:#6A6A69;
+      --btn-bg:      #F0F0EF;
       --btn-text:    #1A1613;
-      --track-bg:    rgba(236,228,214,0.08);
-      --track-fill:  rgba(236,228,214,0.80);
-      --badge-text:  #B6AC9C; --badge-border: rgba(236,228,214,0.16);
-      --tag-text:    #8A8174; --tag-border:   rgba(236,228,214,0.14);
-      --pct-text:    #ECE4D6; --pct-border:   rgba(236,228,214,0.20);
-      --amt-child:   #D9D0BF;
-      --amt-grand:   #B6AC9C;
+      --track-bg:    rgba(240,240,239,0.08);
+      --track-fill:  rgba(240,240,239,0.80);
+      --badge-text:  #ABABAA; --badge-border: rgba(240,240,239,0.16);
+      --tag-text:    #888887; --tag-border:   rgba(240,240,239,0.14);
+      --pct-text:    #F0F0EF; --pct-border:   rgba(240,240,239,0.20);
+      --amt-child:   #D4D4D3;
+      --amt-grand:   #ABABAA;
       --danger:      #C0795F;  /* тёплый сигнал перерасхода */
     }
 
@@ -201,8 +201,8 @@
     .income-input {
       background: none; border: none;
       border-bottom: 2px solid var(--gold);
-      color: var(--white); font-size: 48px; font-weight: 600;
-      width: 220px; text-align: center; outline: none;
+      color: var(--white); font-size: clamp(32px, 10vw, 48px); font-weight: 600;
+      width: min(220px, 55vw); text-align: center; outline: none;
       padding-bottom: 4px;
       -moz-appearance: textfield; appearance: textfield;
     }
@@ -243,11 +243,10 @@
     .level-block.show { opacity: 1; transform: none; }
 
     .level-hdr {
-      font-size: 11px; font-weight: 600;
-      letter-spacing: .08em; text-transform: uppercase;
+      font-size: 12px; font-weight: 500;
       color: var(--gray); margin-bottom: .875rem;
     }
-    .level-hdr span { color: var(--white); font-size: 14px; letter-spacing: 0; text-transform: none; }
+    .level-hdr span { color: var(--white); font-size: 14px; }
 
     .acc-row {
       display: flex; align-items: center;
@@ -415,8 +414,7 @@
     /* ── Settings ───────────────────────────────── */
     .settings-sec { margin-bottom: 2rem; }
     .settings-sub {
-      font-size: 11px; font-weight: 600;
-      letter-spacing: .07em; text-transform: uppercase;
+      font-size: 12px; font-weight: 500;
       color: var(--gray); margin-bottom: .75rem;
       padding-bottom: .5rem;
       border-bottom: 1px solid rgba(255,255,255,.06);
@@ -1007,7 +1005,7 @@
             <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c-future);border-radius:0 2px 2px 0"></div>
             <span class="acc-emoji" data-ic="future" data-ic-head data-ic-size="18"></span>
             <div class="acc-info">
-              <div class="acc-name">Деньги будущего <span class="badge badge-bank">БАНК</span></div>
+              <div class="acc-name">Деньги будущего <span class="badge badge-bank">Банк</span></div>
               <div class="acc-where" id="whereFuture">Отдельный счёт в банке</div>
             </div>
             <span class="acc-pct" style="background:rgba(59,130,246,.14);color:var(--c-future)" id="pctFuture">10%</span>
@@ -1018,7 +1016,7 @@
             <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c-fun);border-radius:0 2px 2px 0"></div>
             <span class="acc-emoji" data-ic="fun" data-ic-head data-ic-size="18"></span>
             <div class="acc-info">
-              <div class="acc-name">Развлечения <span class="badge badge-bank">БАНК</span></div>
+              <div class="acc-name">Развлечения <span class="badge badge-bank">Банк</span></div>
               <div class="acc-where" id="whereFun">Отдельный счёт в банке</div>
             </div>
             <span class="acc-pct" style="background:rgba(0,200,150,.14);color:var(--c-fun)" id="pctFun">10%</span>
@@ -1050,7 +1048,7 @@
               <div class="l3-child">
                 <span class="l3-child-emoji" data-ic="capital" data-ic-size="16"></span>
                 <div class="l3-child-info">
-                  <div class="l3-child-name">Капитал <span class="badge badge-bank">БАНК</span></div>
+                  <div class="l3-child-name">Капитал <span class="badge badge-bank">Банк</span></div>
                   <div class="l3-child-where" id="whereCapital">Инвестиции — не тратить</div>
                 </div>
                 <div class="l3-child-amt" style="color:var(--c-capital)" id="amtCapital">—</div>
@@ -1066,14 +1064,14 @@
               <div class="l3-grand">
                 <span class="l3-grand-emoji" data-ic="bigDream" data-ic-size="15"></span>
                 <div class="l3-grand-info">
-                  <div class="l3-grand-name">Крупные мечты <span class="badge badge-bank">БАНК</span></div>
+                  <div class="l3-grand-name">Крупные мечты <span class="badge badge-bank">Банк</span></div>
                 </div>
                 <div class="l3-grand-amt" style="color:var(--c-bigDream)" id="amtBigDream">—</div>
               </div>
               <div class="l3-grand">
                 <span class="l3-grand-emoji" data-ic="smallDream" data-ic-size="15"></span>
                 <div class="l3-grand-info">
-                  <div class="l3-grand-name">Мелкие мечты <span class="badge badge-home">ДОМА</span></div>
+                  <div class="l3-grand-name">Мелкие мечты <span class="badge badge-home">Дома</span></div>
                 </div>
                 <div class="l3-grand-amt" style="color:var(--c-smallDream)" id="amtSmallDream">—</div>
               </div>
@@ -1096,7 +1094,7 @@
               <div class="l3-child">
                 <span class="l3-child-emoji" data-ic="necessity" data-ic-size="16"></span>
                 <div class="l3-child-info">
-                  <div class="l3-child-name">Необходимое <span class="badge badge-home">ДОМА</span></div>
+                  <div class="l3-child-name">Необходимое <span class="badge badge-home">Дома</span></div>
                   <div class="l3-child-where">Еда, аренда, транспорт</div>
                 </div>
                 <div class="l3-child-amt" style="color:var(--c-necessity)" id="amtNecessity">—</div>
@@ -1104,7 +1102,7 @@
               <div class="l3-child">
                 <span class="l3-child-emoji" data-ic="unexpected" data-ic-size="16"></span>
                 <div class="l3-child-info">
-                  <div class="l3-child-name">Непредвиденное <span class="badge badge-home">ДОМА</span></div>
+                  <div class="l3-child-name">Непредвиденное <span class="badge badge-home">Дома</span></div>
                   <div class="l3-child-where">Резерв на внезапные траты</div>
                 </div>
                 <div class="l3-child-amt" style="color:var(--c-unexpected)" id="amtUnexpected">—</div>
